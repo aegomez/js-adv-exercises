@@ -1,0 +1,16 @@
+{
+  "name": "js-adv-exercises",
+  "version": "1.0.0",
+  "description": "JavaScript Advanced Exercises",
+  "main": "index.js",
+  "repository": "https://github.com/aegomez/js-adv-exercises",
+  "author": "Adrian Gomez <aegomez@tekmexico.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^26.1.0",
+    "prettier": "^2.0.5"
+  }
+}
