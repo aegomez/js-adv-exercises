@@ -1,39 +1,37 @@
 'use strict';
 
-const runBatches = (tasks, batch_size) => {
-  const results = [];
-
+const runBatches = async (tasks, batch_size) => {
   try {
     if (!(tasks instanceof Array) || typeof batch_size !== 'number') {
       throw new Error('invalid arguments');
     }
 
-    return new Promise(resolve => {
-      let nextTaskIndex = 0;
-      let pendingTasks = tasks.length;
+    const results = [];
+    const _batch_size = Math.min(batch_size, tasks.length);
 
-      const runNextTask = taskIndex => {
-        if (taskIndex < tasks.length) {
-          Promise.resolve(
-            tasks[taskIndex]()
-              .then(value => ({ value }))
-              .catch(error => ({ error }))
-          ).then(taskResult => {
-            results[taskIndex] = taskResult;
-            pendingTasks--;
-            runNextTask(nextTaskIndex++);
-          });
-        } else if (pendingTasks === 0) {
-          resolve(results);
+    let nextTaskIndex = 0;
+    let runningTasks = [];
+
+    const runNextTask = async () => {
+      while (nextTaskIndex < tasks.length) {
+        let index = nextTaskIndex++;
+
+        try {
+          results[index] = { value: await tasks[index]() };
+        } catch (error) {
+          results[index] = { error };
         }
-      };
-
-      while (nextTaskIndex < batch_size) {
-        runNextTask(nextTaskIndex++);
       }
-    });
+    };
+
+    while (nextTaskIndex < _batch_size) {
+      runningTasks.push(runNextTask());
+    }
+    await Promise.all(runningTasks);
+
+    return results;
   } catch (error) {
-    return Promise.reject(error);
+    throw error;
   }
 };
 
