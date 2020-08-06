@@ -61,7 +61,7 @@ describe('queryRetry', () => {
         expect(callback).toHaveBeenCalledTimes(5);
         expect(callback).toHaveBeenLastCalledWith('api/five');
       }
-    }, 10000);
+    }, 6000);
 
     test('the delay time is not increased', async () => {
       const callback = jest.fn();
@@ -82,10 +82,10 @@ describe('queryRetry', () => {
         const t1 = performance.now();
         const time = t1 - t0;
 
-        expect(time).toBeGreaterThan(4000);
-        expect(time).toBeLessThan(4100);
+        expect(time).toBeGreaterThan(3000);
+        expect(time).toBeLessThan(3100);
       }
-    }, 10000);
+    });
 
     test('the delay time is increased after each retry', async () => {
       const callback = jest.fn();
@@ -106,9 +106,9 @@ describe('queryRetry', () => {
         const t1 = performance.now();
         const time = t1 - t0;
 
-        expect(time).toBeGreaterThan(10000);
-        expect(time).toBeLessThan(10100);
+        expect(time).toBeGreaterThan(6000);
+        expect(time).toBeLessThan(6100);
       }
-    }, 15000);
+    }, 10000);
   });
 });
