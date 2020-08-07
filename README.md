@@ -10,6 +10,8 @@ JavaScript Advanced Exercises
 
 ## Algorithms
 
+- Merge two sorted arrays where one has enough space at the end for the other.
+
 ## Author
 
 Adrian Gomez
