@@ -1,19 +1,16 @@
 const mergeArrays = (largeArray, smallArray) => {
-  let l0 = 0;
-  let l1 = largeArray.length - smallArray.length;
-  let s = 0;
+  let s = smallArray.length - 1;
+  let l1 = largeArray.length - 1;
+  let l0 = l1 - s - 1;
+  let insert = false;
 
-  while (s < smallArray.length) {
-    let nextSmall = smallArray[s++];
+  // merge all elements, starting from the largest
+  while (s >= 0) {
+    // if true, insert next element from smallArray,
+    // else, move next element within largeArray
+    insert = l0 < 0 || largeArray[l0] <= smallArray[s];
 
-    // move all elements that are greater than the
-    // new element, one position to the right
-    for (l0 = l1++; nextSmall < largeArray[l0 - 1]; l0--) {
-      largeArray[l0] = largeArray[l0 - 1];
-    }
-
-    // insert new element
-    largeArray[l0] = nextSmall;
+    largeArray[l1--] = insert ? smallArray[s--] : largeArray[l0--];
   }
 };
 
