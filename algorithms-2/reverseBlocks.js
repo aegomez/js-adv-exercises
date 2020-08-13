@@ -4,19 +4,22 @@ const reverseBlocks = (array, blockSize) => {
     blockSize = array.length;
   }
 
-  let next = blockSize - 1;
-  let rest;
+  let half = blockSize >> 1; // blockSize/2 (floor)
+  let last; // last index of the current block
+  let next; // remaining elements after current block
 
-  for (let i = 0; i < array.length; i++) {
-    if (next > 0) {
+  for (let i = 0; i < array.length; i += blockSize) {
+    next = array.length - i;
+    if (next < blockSize) {
+      blockSize = next;
+      half = next >> 1;
+    }
+
+    last = i + blockSize - 1;
+
+    for (let j = 0; j < half; j++) {
       // swap two elements inside a block
-      [array[i], array[i + next]] = [array[i + next], array[i]];
-      next -= 2;
-    } else {
-      // increase by blockSize/2, rounded down
-      i += (blockSize - 1) >> 1;
-      rest = array.length - i - 1;
-      next = rest < blockSize ? rest - 1 : blockSize - 1;
+      [array[i + j], array[last - j]] = [array[last - j], array[i + j]];
     }
   }
 };
