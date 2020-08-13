@@ -7,6 +7,7 @@ const reverseBlocks = (array, blockSize) => {
   let half = blockSize >> 1; // blockSize/2 (floor)
   let last; // last index of the current block
   let next; // remaining elements after current block
+  let temp;
 
   for (let i = 0; i < array.length; i += blockSize) {
     next = array.length - i;
@@ -19,7 +20,9 @@ const reverseBlocks = (array, blockSize) => {
 
     for (let j = 0; j < half; j++) {
       // swap two elements inside a block
-      [array[i + j], array[last - j]] = [array[last - j], array[i + j]];
+      temp = array[i + j];
+      array[i + j] = array[last - j];
+      array[last - j] = temp;
     }
   }
 };
