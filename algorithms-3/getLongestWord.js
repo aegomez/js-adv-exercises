@@ -1,63 +1,41 @@
 const tree = require('./tree.json');
 
 const getLongestWord = letters => {
-  let node = tree;
-  let _letters = letters.toLowerCase();
-  let available = '';
-  let longest = '';
-
-  // const sorted = [...letters.toLowerCase()]
-  //   .sort((a, b) => a.localeCompare(b))
-  //   .join('');
-
-  // for (char of sorted) {
-  //   if (node[char] === undefined) {
-  //     break;
-  //   }
-  //   node = node[char];
-  // }
-
-  // return node._ || 'NOT_FOUND';
-
+  const sorted = [...letters.toLowerCase()]
+    .sort((a, b) => a.localeCompare(b))
+    .join('');
   const stack = [];
-  stack.push(node);
-  let char = '';
-  let index = 0;
 
-  console.log(stack);
+  let index = 0; // index of next char in "sorted"
+  let longest = '';
+  let next; // next element from the stack
+
+  stack.push({ node: tree, position: 0 });
 
   while (stack.length) {
-    node = stack.pop();
+    next = stack.pop();
 
-    if (node._.length > longest.length) {
-      longest = node._;
+    // evaluate current node
+    if (next.node.w.length > longest.length) {
+      longest = next.node.w;
     }
-    if (longest.length === _letters.length) {
+    if (longest.length === sorted.length) {
       return longest;
     }
-    let children = Object.keys(node.ch);
-    // if (!children.length)
-    // {
-    //   available = _letters
-    // }
 
-    for (let i = children.length - 1; i >= 0; i--) {
-      char = children[i];
-      index = available.indexOf(char);
+    // add children nodes to the stack if their value is available
+    for (let i = next.node.ch.length - 1; i >= 0; i--) {
+      index = sorted.indexOf(next.node.ch[i].v, next.position);
       if (index > -1) {
-        available.replace(char, '');
-        stack.push(node.ch[char]);
+        stack.push({
+          node: next.node.ch[i],
+          position: index + 1,
+        });
       }
     }
   }
 
-  return longest || 'ERROR';
+  return longest;
 };
 
 module.exports = getLongestWord;
-
-console.log(getLongestWord('att'));
-// console.log(getLongestWord('act'));
-// console.log(getLongestWord('cat'));
-// console.log(getLongestWord('esratinda'));
-// console.log(getLongestWord('MSTUEHNDI'));

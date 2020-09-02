@@ -8,9 +8,10 @@
 const { readFileSync, writeFileSync } = require('fs');
 
 class Node {
-  constructor() {
-    this._ = ''; // node value
-    this.ch = undefined; // node children
+  constructor(value = '') {
+    this.v = value; // node value
+    this.w = ''; // longest word at node
+    this.ch = []; // node children
   }
 }
 
@@ -19,6 +20,7 @@ const list = text.split(/\s+/);
 const tree = new Node();
 
 let node;
+let next;
 let sorted = '';
 
 for (let word of list) {
@@ -26,16 +28,16 @@ for (let word of list) {
   sorted = [...word].sort((a, b) => a.localeCompare(b)).join('');
 
   for (let char of sorted) {
-    if (!node.ch) {
-      node.ch = {};
+    next = node.ch.find(child => child.v === char);
+    if (next === undefined) {
+      next = new Node(char);
+      node.ch.push(next);
+      node.ch.sort((a, b) => a.v.localeCompare(b.v));
     }
-    if (node.ch[char] === undefined) {
-      node.ch[char] = new Node();
-    }
-    node = node.ch[char];
+    node = next;
   }
-  if (!node._) {
-    node._ = word;
+  if (!node.w) {
+    node.w = word;
   }
 }
 
